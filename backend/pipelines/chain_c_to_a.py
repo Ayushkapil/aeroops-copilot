@@ -1,53 +1,43 @@
-"""
-Pipeline: Fatigue Risk Assessment → SOP Retrieval (Module C → Module A).
+"""Cross-module chain: Fatigue Assessment (C) → SOP/Regulation Lookup (A)."""
 
-When Module C detects a high fatigue risk score, this pipeline
-automatically queries Module A (SOP RAG) for rest and duty regulations
-to provide contextual mitigation guidance.
-"""
+import logging
+from modules.module_a.retriever import SOPRetriever
+from modules.module_a.reranker import rerank
+from modules.module_a.generator import generate_answer
 
-from __future__ import annotations
+logger = logging.getLogger(__name__)
 
-from typing import Any
+FATIGUE_QUERIES = [
+    "FAA rest requirements for flight crew duty time limitations",
+    "FAR Part 117 flight duty period limits",
+    "augmented crew requirements for extended operations",
+    "fatigue risk management system FRMS requirements",
+]
 
 
-class FatigueToSOPChain:
-    """
-    Orchestrates the Fatigue Risk → SOP Retrieval cross-module chain.
+def enrich_with_regulations(assessment: dict, db_client=None) -> dict:
+    """If fatigue risk is high, auto-query Module A for relevant regulations."""
+    if assessment.get("overall_risk") != "high" and assessment.get("max_score", 0) <= 60:
+        assessment["regulation_enrichment"] = []
+        return assessment
 
-    Flow:
-        1. Module C scores the pilot schedule → produces a fatigue result
-        2. If risk is ``"High"``, this chain triggers Module A
-        3. Module A retrieves relevant rest/duty regulations (e.g. FAA AC 117-1)
-        4. Retrieved regulations are included in the final mitigation response
+    retriever = SOPRetriever(db_client)
+    reg_results = []
 
-    Typical usage:
-        chain = FatigueToSOPChain(module_c=scorer, module_a_pipeline=rag)
-        result = chain.run(schedule_df)
-    """
+    for query in FATIGUE_QUERIES:
+        try:
+            chunks = retriever.retrieve(query, top_k=10)
+            if chunks:
+                ranked = rerank(query, chunks, top_k=2)
+                if ranked:
+                    result = generate_answer(query, ranked)
+                    reg_results.append({
+                        "query": query,
+                        "answer": result["answer"],
+                        "citations": result["citations"],
+                    })
+        except Exception as e:
+            logger.warning(f"Regulation lookup failed for '{query}': {e}")
 
-    HIGH_RISK_THRESHOLD = 60
-
-    def __init__(self, module_c: Any = None, module_a_pipeline: Any = None) -> None:
-        """
-        Args:
-            module_c: Initialised Module C fatigue scorer.
-            module_a_pipeline: Initialised Module A RAG pipeline.
-        """
-        self.module_c = module_c
-        self.module_a_pipeline = module_a_pipeline
-
-    def run(self, schedule_df: Any) -> dict:
-        """
-        Run the fatigue-to-SOP chain on a pilot schedule DataFrame.
-
-        Args:
-            schedule_df: Validated pilot schedule DataFrame.
-
-        Returns:
-            Dict with ``fatigue_result`` and optionally ``sop_results`` keys.
-
-        Raises:
-            NotImplementedError: Until chain orchestration is implemented.
-        """
-        raise NotImplementedError("Fatigue → SOP chain not yet implemented.")
+    assessment["regulation_enrichment"] = reg_results
+    return assessment

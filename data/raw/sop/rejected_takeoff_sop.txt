@@ -1,0 +1,58 @@
+REJECTED TAKEOFF (RTO) PROCEDURES — STANDARD OPERATING PROCEDURE
+
+Section 1.0 — Scope
+This procedure defines criteria and actions for rejecting a takeoff, in accordance with FAA AC 120-62.
+
+Section 2.0 — Decision Speed (V1)
+V1 is the maximum speed at which the takeoff can be safely aborted and the aircraft brought to a stop within the remaining runway. Once past V1, the crew is committed to fly.
+- V1 is calculated for each takeoff based on weight, runway length, elevation, temperature, wind, and runway condition
+- V1 must be briefed and called out during every takeoff
+
+Section 3.0 — Reasons to Reject Below V1
+A takeoff SHALL be rejected below V1 for:
+1. Engine failure or fire
+2. Windshield failure affecting visibility
+3. Tire failure
+4. Fire warning (cargo, engine, APU)
+5. Predictive wind shear warning
+6. Aircraft configuration warning
+7. ATC instruction to hold position
+8. Runway incursion — vehicle/aircraft/person on runway
+9. Any condition that renders the aircraft unsafe for flight
+
+Section 4.0 — Reasons NOT to Reject Above V1
+Above V1, the takeoff should NOT be rejected unless the aircraft is determined to be unable to fly. Above V1, the risks of stopping on the remaining runway generally exceed the risks of continuing.
+NOTE: Even dual engine failure above V1 should be handled airborne if runway remaining is insufficient for stopping.
+
+Section 5.0 — RTO Procedure
+When the decision is made to reject:
+1. Captain calls "REJECT" — Captain takes control if not already flying
+2. Thrust levers — IDLE (simultaneously)
+3. Brakes — MAXIMUM (autobrakes may activate if armed for RTO)
+4. Speed brakes — EXTEND (verify deployment)
+5. Reverse thrust — MAXIMUM on all engines
+6. Maintain directional control on centerline
+7. Tower: "Rejecting takeoff, [callsign]"
+
+Section 6.0 — After Stopping
+1. Assess: fire, engine damage, brake temperature
+2. If fire or smoke: evacuate on runway if necessary
+3. If no fire: taxi clear of runway if able
+4. Request emergency services if brake energy is high (risk of tire/brake fire)
+5. Do NOT attempt to taxi with brake temperature above limits
+CAUTION: Maximum energy RTOs generate extreme brake heat. Tire fuse plugs may melt, deflating tires. Expect brake fire possibility within 5 minutes.
+
+Section 7.0 — Go/No-Go Above 80 Knots
+Between 80 knots and V1, only reject for critical items:
+- Engine failure or fire
+- Loss of directional control
+- Unsafe condition making flight impossible
+
+Below 80 knots, reject for any abnormality. Above 80 knots, minor items should be addressed after takeoff unless they prevent safe flight.
+
+Section 8.0 — Training
+All crew must practice high-speed RTOs during recurrent simulator training. Emphasis on:
+- V1 callout discipline
+- Rapid thrust lever closure
+- Maximum braking application without delay
+- Maintaining centerline during deceleration

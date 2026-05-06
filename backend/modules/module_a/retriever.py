@@ -1,44 +1,48 @@
-"""
-Module A — SOP RAG Pipeline: Retriever.
+"""SOP RAG retriever with checklist-aware search."""
 
-Performs pgvector similarity search to retrieve the most relevant SOP
-chunks for a given query embedding.
-"""
-
-from __future__ import annotations
-
-from typing import Any
+from ingestion.embedder import embed_query
+from db.pgvector_client import PgVectorClient
 
 
 class SOPRetriever:
-    """
-    Retrieves top-k SOP document chunks from the pgvector database
-    using cosine similarity search.
+    def __init__(self, db_client: PgVectorClient = None):
+        self.db = db_client or PgVectorClient()
 
-    Typical usage:
-        retriever = SOPRetriever(client=pgvector_client)
-        chunks = retriever.retrieve(query_embedding, top_k=20)
-    """
+    def retrieve(self, query: str, top_k: int = 20) -> list[dict]:
+        """Embed query and run cosine similarity search."""
+        query_embedding = embed_query(query)
+        results = self.db.similarity_search(query_embedding, top_k=top_k)
+        return results
 
-    def __init__(self, client: Any = None) -> None:
-        """
-        Args:
-            client: Initialised pgvector DB client.
-        """
-        self.client = client
+    def retrieve_checklist(self, query: str, top_k: int = 30) -> list[dict]:
+        """Retrieve with preference for checklist-containing chunks."""
+        query_embedding = embed_query(query)
+        results = self.db.similarity_search(query_embedding, top_k=top_k)
 
-    def retrieve(self, query_embedding: list[float], top_k: int = 20) -> list[dict]:
-        """
-        Retrieve the top-k most similar document chunks.
+        for r in results:
+            meta = r.get("metadata", {})
+            if meta.get("is_checklist"):
+                r["similarity"] = r.get("similarity", 0) + 0.1
 
-        Args:
-            query_embedding: Dense vector representation of the query.
-            top_k: Number of chunks to return before reranking.
+        results.sort(key=lambda x: x.get("similarity", 0), reverse=True)
+        return results
 
-        Returns:
-            List of chunk dicts with ``content`` and ``metadata`` keys.
+    def retrieve_by_section(self, query: str, top_k: int = 20) -> list[dict]:
+        """Retrieve, then pull adjacent chunks from the same section."""
+        results = self.retrieve(query, top_k=top_k)
+        if not results:
+            return results
 
-        Raises:
-            NotImplementedError: Until pgvector retrieval is implemented.
-        """
-        raise NotImplementedError("pgvector similarity search not yet implemented.")
+        best = results[0]
+        best_section = best.get("metadata", {}).get("section_title", "")
+        best_source = best.get("metadata", {}).get("source_file", "")
+
+        section_chunks = [
+            r for r in results
+            if r.get("metadata", {}).get("section_title") == best_section
+            and r.get("metadata", {}).get("source_file") == best_source
+        ]
+        section_chunks.sort(key=lambda x: x.get("metadata", {}).get("chunk_index", 0))
+
+        other_chunks = [r for r in results if r not in section_chunks]
+        return section_chunks + other_chunks[:5]

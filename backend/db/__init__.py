@@ -1,1 +1,1 @@
-"""Database package — vector store client."""
+from .pgvector_client import PgVectorClient

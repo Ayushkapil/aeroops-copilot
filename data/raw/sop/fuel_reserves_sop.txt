@@ -1,0 +1,30 @@
+FUEL RESERVE REQUIREMENTS — STANDARD OPERATING PROCEDURE
+
+Section 1.0 — Regulatory Basis
+This procedure is established in accordance with FAR 91.167 (IFR fuel requirements) and FAR 91.151 (VFR fuel requirements).
+
+Section 2.0 — IFR Fuel Requirements (FAR 91.167)
+No person may operate a civil aircraft in IFR conditions unless it carries enough fuel to:
+(a) Complete the flight to the first airport of intended landing
+(b) Fly from that airport to the alternate airport (if an alternate is required)
+(c) Fly after that for 45 minutes at normal cruising speed
+
+Section 2.1 — Alternate Airport Fuel
+When an alternate airport is required, fuel planning must include fuel to fly to the alternate at planned cruise altitude using forecast winds, plus the 45-minute reserve.
+
+Section 3.0 — VFR Fuel Requirements (FAR 91.151)
+During the day, no person may begin a VFR flight unless there is enough fuel to fly to the first point of intended landing and, assuming normal cruising speed, to fly after that for at least 30 minutes.
+At night, the VFR reserve increases to 45 minutes.
+
+Section 4.0 — Company Policy (Exceeds FAR Minimums)
+Company policy requires:
+- IFR flights: 60-minute fuel reserve beyond alternate (exceeding the FAR 45-minute minimum)
+- VFR day: 45-minute reserve (exceeding the FAR 30-minute minimum)
+- VFR night: 60-minute reserve (exceeding the FAR 45-minute minimum)
+- International overwater: fuel to nearest suitable airport plus 2 hours reserve
+
+Section 5.0 — Low Fuel Declaration
+Pilots SHALL declare minimum fuel to ATC when the remaining fuel suggests arrival at destination with less than the planned reserve. Pilots SHALL declare MAYDAY FUEL when remaining fuel is insufficient to safely complete the approach.
+
+Section 6.0 — Fuel Monitoring
+Fuel state shall be checked and recorded at each waypoint. Any discrepancy greater than 5% from planned fuel burn requires crew discussion and possible diversion consideration.

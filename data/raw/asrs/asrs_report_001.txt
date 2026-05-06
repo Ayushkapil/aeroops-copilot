@@ -1,0 +1,14 @@
+ASRS REPORT — ACN 1987654
+
+NARRATIVE:
+During approach to runway 28R at SFO, we were conducting an ILS approach in IMC conditions with visibility reported at 1/2 mile. At approximately 800 feet AGL, the First Officer who was the pilot flying called "500 feet, not stabilized" as our airspeed was VREF+25 and we were one dot above the glideslope. I called for a go-around but the FO hesitated momentarily before initiating the go-around. 
+
+We executed the missed approach procedure and were vectored for a second approach. On the second attempt, we maintained stabilized approach criteria and landed without incident.
+
+Contributing factors include: gusty wind conditions (reported 15G25), the FO's limited experience with SFO approaches in low visibility, and a late configuration change requested by ATC (we were told to maintain 180 knots to the outer marker).
+
+The ATC speed restriction delayed our ability to configure the aircraft in time for a normal descent profile. I recommend that approach control be made aware of the impact late speed restrictions have on approach stability.
+
+FLIGHT PHASE: Approach
+AIRCRAFT: B737-800
+WEATHER: IMC, visibility 1/2SM, winds 250/15G25

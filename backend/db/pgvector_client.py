@@ -1,79 +1,121 @@
+"""PostgreSQL + pgvector client for vector storage and similarity search."""
+
+import os
+import json
+import logging
+from typing import Optional
+
+import psycopg2
+from psycopg2.extras import execute_values, RealDictCursor
+from dotenv import load_dotenv
+
+load_dotenv()
+logger = logging.getLogger(__name__)
+
+CREATE_EXTENSION = "CREATE EXTENSION IF NOT EXISTS vector;"
+CREATE_TABLE = """
+CREATE TABLE IF NOT EXISTS sop_chunks (
+    id SERIAL PRIMARY KEY,
+    content TEXT NOT NULL,
+    metadata JSONB DEFAULT '{}',
+    embedding vector(384),
+    content_hash TEXT UNIQUE
+);
 """
-Database: pgvector Client.
-
-Provides an interface for storing and querying document embeddings in
-PostgreSQL + pgvector (Supabase).
+CREATE_INDEX = """
+CREATE INDEX IF NOT EXISTS sop_chunks_embedding_idx
+ON sop_chunks USING ivfflat (embedding vector_cosine_ops) WITH (lists = 100);
 """
 
-from __future__ import annotations
 
-from typing import Any
+class PgVectorClient:
+    def __init__(self, database_url: Optional[str] = None):
+        self.database_url = database_url or os.getenv("DATABASE_URL",
+            "postgresql://aeroops:aeroops@localhost:5432/aeroops")
+        self._conn = None
 
+    @property
+    def conn(self):
+        if self._conn is None or self._conn.closed:
+            self._conn = psycopg2.connect(self.database_url)
+            self._conn.autocommit = True
+        return self._conn
 
-class PGVectorClient:
-    """
-    Client for vector similarity search operations against a
-    PostgreSQL + pgvector database (hosted on Supabase).
+    def init_db(self):
+        """Create the pgvector extension and sop_chunks table."""
+        with self.conn.cursor() as cur:
+            cur.execute(CREATE_EXTENSION)
+            cur.execute(CREATE_TABLE)
+            # Only create ivfflat index if enough rows exist
+            cur.execute("SELECT COUNT(*) FROM sop_chunks;")
+            count = cur.fetchone()[0]
+            if count >= 100:
+                try:
+                    cur.execute(CREATE_INDEX)
+                except Exception:
+                    pass
+        logger.info("Database initialized.")
 
-    Typical usage:
-        client = PGVectorClient.from_env()
-        client.upsert(chunks_with_embeddings)
-        results = client.similarity_search(query_embedding, top_k=20)
-    """
-
-    def __init__(self, url: str = "", key: str = "") -> None:
+    def insert_chunks(self, chunks: list[dict]):
+        """Insert chunks with embeddings into sop_chunks.
+        Each chunk: {content, metadata, embedding, content_hash}
         """
-        Args:
-            url: Supabase project URL.
-            key: Supabase service role key.
+        if not chunks:
+            return
+        with self.conn.cursor() as cur:
+            values = []
+            for c in chunks:
+                emb_str = "[" + ",".join(str(x) for x in c["embedding"]) + "]"
+                values.append((
+                    c["content"],
+                    json.dumps(c.get("metadata", {})),
+                    emb_str,
+                    c.get("content_hash", ""),
+                ))
+            execute_values(cur,
+                """INSERT INTO sop_chunks (content, metadata, embedding, content_hash)
+                   VALUES %s ON CONFLICT (content_hash) DO NOTHING""",
+                values,
+                template="(%s, %s::jsonb, %s::vector, %s)"
+            )
+        logger.info(f"Inserted {len(chunks)} chunks.")
+
+    def similarity_search(self, query_embedding: list[float], top_k: int = 20) -> list[dict]:
+        """Cosine similarity search returning top_k chunks."""
+        emb_str = "[" + ",".join(str(x) for x in query_embedding) + "]"
+        sql = """
+            SELECT id, content, metadata,
+                   1 - (embedding <=> %s::vector) AS similarity
+            FROM sop_chunks
+            ORDER BY embedding <=> %s::vector
+            LIMIT %s;
         """
-        self.url = url
-        self.key = key
-        self._client: Any = None
+        with self.conn.cursor(cursor_factory=RealDictCursor) as cur:
+            cur.execute(sql, (emb_str, emb_str, top_k))
+            rows = cur.fetchall()
+        results = []
+        for r in rows:
+            meta = r["metadata"] if isinstance(r["metadata"], dict) else json.loads(r["metadata"])
+            results.append({
+                "id": r["id"],
+                "content": r["content"],
+                "metadata": meta,
+                "similarity": float(r["similarity"]),
+            })
+        return results
 
-    @classmethod
-    def from_env(cls) -> "PGVectorClient":
-        """
-        Instantiate a client using environment variables
-        ``SUPABASE_URL`` and ``SUPABASE_KEY``.
+    def get_all_sources(self) -> list[str]:
+        """Return distinct source filenames."""
+        sql = "SELECT DISTINCT metadata->>'source_file' AS src FROM sop_chunks WHERE metadata->>'source_file' IS NOT NULL;"
+        with self.conn.cursor() as cur:
+            cur.execute(sql)
+            return [r[0] for r in cur.fetchall()]
 
-        Returns:
-            Configured :class:`PGVectorClient` instance.
-        """
-        import os
+    def chunk_exists(self, content_hash: str) -> bool:
+        with self.conn.cursor() as cur:
+            cur.execute("SELECT 1 FROM sop_chunks WHERE content_hash = %s LIMIT 1;", (content_hash,))
+            return cur.fetchone() is not None
 
-        return cls(
-            url=os.getenv("SUPABASE_URL", ""),
-            key=os.getenv("SUPABASE_KEY", ""),
-        )
-
-    def upsert(self, chunks: list[dict]) -> None:
-        """
-        Insert or update embedded document chunks in the vector store.
-
-        Args:
-            chunks: List of chunk dicts containing ``text``, ``embedding``,
-                and ``metadata`` keys.
-
-        Raises:
-            NotImplementedError: Until Supabase upsert is implemented.
-        """
-        raise NotImplementedError("pgvector upsert not yet implemented.")
-
-    def similarity_search(
-        self, query_embedding: list[float], top_k: int = 20
-    ) -> list[dict]:
-        """
-        Perform cosine similarity search against stored embeddings.
-
-        Args:
-            query_embedding: Query vector.
-            top_k: Number of nearest neighbours to return.
-
-        Returns:
-            List of matching chunk dicts sorted by descending similarity.
-
-        Raises:
-            NotImplementedError: Until pgvector search is implemented.
-        """
-        raise NotImplementedError("pgvector similarity search not yet implemented.")
+    def close(self):
+        if self._conn and not self._conn.closed:
+            self._conn.close()

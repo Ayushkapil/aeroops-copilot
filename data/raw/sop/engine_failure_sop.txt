@@ -1,0 +1,57 @@
+ENGINE FAILURE PROCEDURES — STANDARD OPERATING PROCEDURE
+
+Section 1.0 — Scope
+This procedure covers flight crew response to engine failure or malfunction during all phases of flight, in accordance with FAR 91.7 and AC 120-80A.
+
+Section 2.0 — Engine Failure During Takeoff Roll (Below V1)
+If an engine failure occurs before V1:
+1. Retard both thrust levers to idle
+2. Apply maximum braking
+3. Deploy speed brakes/spoilers
+4. Apply reverse thrust on operative engine(s)
+5. If unable to stop on remaining runway, steer to avoid obstacles
+WARNING: Do NOT attempt to continue the takeoff if engine failure occurs below V1.
+
+Section 2.1 — Engine Failure After V1
+If engine failure occurs at or above V1:
+1. Continue the takeoff
+2. Rotate at Vr, maintain V2 or above
+3. Maintain runway heading to 400 feet AGL
+4. Follow engine failure departure procedure
+5. Do NOT retract landing gear until positive rate of climb confirmed
+6. Retract flaps on schedule when safe altitude is reached
+NOTE: V1 is the decision speed. Once past V1, the aircraft is committed to takeoff.
+
+Section 3.0 — Engine Failure During Climb
+1. Maintain aircraft control — fly the aircraft first
+2. Maintain minimum safe airspeed (V2 or Venr as appropriate)
+3. Level off if unable to maintain altitude
+4. Declare MAYDAY to ATC
+5. Execute appropriate engine failure checklist
+6. Consider fuel dumping if overweight for landing
+
+Section 4.0 — Engine Failure During Cruise
+1. Maintain aircraft control
+2. Select maximum continuous thrust on operative engine(s)
+3. Begin drift-down to single-engine ceiling if unable to maintain altitude
+4. Declare MAYDAY to ATC
+5. Plan diversion to nearest suitable airport
+6. Consider terrain clearance during drift-down
+CAUTION: Drift-down altitude may be below minimum en route altitude (MEA). Ensure terrain clearance.
+
+Section 5.0 — Engine Failure During Approach
+1. If engine fails before FAF: execute missed approach and declare emergency
+2. If engine fails after FAF: continue approach if stabilized, go around if not
+3. Increase approach speed by 5-10 knots to account for asymmetric thrust
+4. Be prepared for directional control issues during landing rollout
+5. Request emergency equipment standing by
+
+Section 6.0 — Single-Engine Landing
+1. Brief the approach: expect directional control challenges on rollout
+2. Fly a slightly wider pattern to avoid steep turns toward dead engine
+3. Use full landing flaps if conditions permit
+4. Plan for a longer rollout — reverse thrust on one engine only
+5. Do NOT shut down operative engine until cleared of runway
+
+Section 7.0 — Documentation
+All engine failure events must be documented in the flight report and reported through the Safety Management System (SMS). Maintenance must be notified immediately.

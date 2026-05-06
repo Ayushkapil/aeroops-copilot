@@ -1,4 +1,7 @@
+version: "3.8"
+
 services:
+  # ── PostgreSQL + pgvector ───────────────────────────────────────
   db:
     image: pgvector/pgvector:pg16
     environment:
@@ -6,42 +9,52 @@ services:
       POSTGRES_PASSWORD: aeroops
       POSTGRES_DB: aeroops
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U aeroops"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      interval: 5s
+      timeout: 3s
+      retries: 10
 
+  # ── FastAPI Backend ─────────────────────────────────────────────
   backend:
     build: ./backend
     ports:
       - "8000:8000"
-    env_file:
-      - ./backend/.env
+    env_file: ./backend/.env
+    environment:
+      # Override DATABASE_URL to point to the db container, not localhost
+      DATABASE_URL: postgresql://aeroops:aeroops@db:5432/aeroops
     depends_on:
       db:
         condition: service_healthy
-    profiles:
-      - full
     volumes:
-      - ./backend:/app
-    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+      - ./data:/app/data
 
+  # ── SOP Ingestion (run-once) ────────────────────────────────────
+  # Seeds the database with the sample SOP documents.
+  # Exits after completion — not a long-running service.
+  ingest:
+    build: ./backend
+    command: python -m ingestion.ingest_cli --source /app/data/raw/sop/
+    env_file: ./backend/.env
+    environment:
+      DATABASE_URL: postgresql://aeroops:aeroops@db:5432/aeroops
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./data:/app/data
+
+  # ── React Frontend (nginx) ─────────────────────────────────────
   frontend:
     build: ./frontend
     ports:
-      - "5173:5173"
+      - "3000:80"
     depends_on:
       - backend
-    profiles:
-      - full
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
-    command: npm run dev -- --host
 
 volumes:
   pgdata:

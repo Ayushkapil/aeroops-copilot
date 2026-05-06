@@ -1,52 +1,36 @@
-"""
-Ingestion: PDF Parser.
+"""PDF text extraction using PyMuPDF."""
 
-Parses PDF documents (FAA SOPs, ASRS reports) and extracts structured
-text content suitable for downstream chunking and embedding.
-"""
-
-from __future__ import annotations
+import fitz  # PyMuPDF
+from pathlib import Path
 
 
-class PDFParser:
+def extract_pages(pdf_path: str | Path) -> list[dict]:
+    """Extract text from each page of a PDF.
+    Returns list of {page_number, text}.
     """
-    Parses PDF documents and yields page-level text with metadata.
+    doc = fitz.open(str(pdf_path))
+    pages = []
+    for i, page in enumerate(doc):
+        text = page.get_text("text")
+        if text.strip():
+            pages.append({"page_number": i + 1, "text": text.strip()})
+    doc.close()
+    return pages
 
-    Wraps PyMuPDF (fitz) for robust extraction from complex aviation PDFs.
 
-    Typical usage:
-        parser = PDFParser()
-        pages = parser.parse("data/raw/sop/faa_aim.pdf")
-    """
+def extract_text_from_bytes(file_bytes: bytes) -> list[dict]:
+    """Extract text from PDF bytes (for uploaded files)."""
+    doc = fitz.open(stream=file_bytes, filetype="pdf")
+    pages = []
+    for i, page in enumerate(doc):
+        text = page.get_text("text")
+        if text.strip():
+            pages.append({"page_number": i + 1, "text": text.strip()})
+    doc.close()
+    return pages
 
-    def parse(self, pdf_path: str) -> list[dict]:
-        """
-        Parse a PDF file and return page text with metadata.
 
-        Args:
-            pdf_path: Path to the PDF file.
-
-        Returns:
-            List of dicts with ``page_number`` (int), ``text`` (str), and
-            ``source`` (str) keys.
-
-        Raises:
-            NotImplementedError: Until PDF parsing is implemented.
-        """
-        raise NotImplementedError("PDF parsing not yet implemented.")
-
-    def parse_bytes(self, pdf_bytes: bytes, source: str = "upload") -> list[dict]:
-        """
-        Parse PDF content from raw bytes.
-
-        Args:
-            pdf_bytes: Raw PDF file content.
-            source: Source identifier string (e.g. filename).
-
-        Returns:
-            List of page dicts (same structure as :meth:`parse`).
-
-        Raises:
-            NotImplementedError: Until PDF parsing is implemented.
-        """
-        raise NotImplementedError("PDF parsing not yet implemented.")
+def extract_full_text(pdf_path: str | Path) -> str:
+    """Extract all text from PDF as a single string."""
+    pages = extract_pages(pdf_path)
+    return "\n\n".join(p["text"] for p in pages)

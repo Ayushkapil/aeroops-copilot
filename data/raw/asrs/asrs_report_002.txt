@@ -1,0 +1,14 @@
+ASRS REPORT — ACN 2034521
+
+NARRATIVE:
+While taxiing for departure at ATL on taxiway Bravo, we were cleared to cross runway 27L. As we began to cross, we noticed a regional jet on short final for 27L approximately 1 mile out. We immediately stopped on the runway and advised tower. Tower then issued a go-around to the arriving aircraft.
+
+Investigation revealed that the local controller had cleared us to cross while forgetting about the arriving traffic. The ground controller had handed us off to tower frequency but there was a miscommunication about our position. We were on taxiway B3 which intersects 27L.
+
+The runway incursion was classified as category B — significant potential for collision. No evasive action was required by the arriving aircraft as the go-around was initiated in time, but the separation was reduced to approximately 0.8 miles.
+
+I recommend enhanced coordination procedures between ground and local controllers, particularly during peak traffic periods at ATL.
+
+FLIGHT PHASE: Taxi
+AIRCRAFT: A320
+WEATHER: VMC, clear skies

@@ -1,0 +1,74 @@
+INSTRUMENT APPROACH PROCEDURES — STANDARD OPERATING PROCEDURE
+
+Section 1.0 — Scope
+This procedure covers the conduct of instrument approaches in accordance with FAR 91.175, AIM Chapter 5, and company policy.
+
+Section 2.0 — Approach Types and Minimums
+2.1 Precision Approaches (PA): ILS, GLS — vertical and lateral guidance. Decision Altitude (DA).
+2.2 Approaches with Vertical Guidance (APV): LPV, LNAV/VNAV — advisory vertical guidance. Decision Altitude (DA).
+2.3 Non-Precision Approaches (NPA): VOR, NDB, LNAV, LOC — lateral guidance only. Minimum Descent Altitude (MDA).
+
+Section 3.0 — Approach Briefing
+The approach briefing SHALL include:
+1. Type of approach and runway
+2. Navigation frequencies and courses
+3. Decision altitude/MDA and visibility requirements
+4. Missed approach procedure and altitude
+5. Airport diagram and taxi plan
+6. NOTAMs affecting the approach
+7. Weather at destination and alternate
+8. Go-around procedure including thrust setting and initial altitude
+
+Section 4.0 — Approach Execution
+4.1 ILS Approach:
+- Intercept localizer from assigned heading
+- Maintain localizer within 1 dot
+- Capture glideslope from below
+- Maintain glideslope within 1 dot
+- Cross FAF at published altitude
+- Begin timing if required
+
+4.2 RNAV (GPS) Approach:
+- Verify GPS RAIM availability
+- Load and activate approach in FMS
+- Verify waypoint sequence matches published procedure
+- Monitor CDI scaling changes (terminal to approach mode)
+- Cross waypoints at published altitudes
+
+Section 5.0 — Decision Point Actions
+5.1 At DA/DH (Precision):
+- If runway environment is in sight: continue to land
+- If runway environment is NOT in sight: execute missed approach immediately
+- Runway environment includes: approach lights, threshold, runway markings, VASI/PAPI
+
+5.2 At MDA (Non-Precision):
+- Level off at MDA
+- Continue to MAP at approach speed
+- If runway environment is in sight before MAP: descend for landing
+- If runway environment is NOT in sight at MAP: execute missed approach
+
+WARNING: Do NOT descend below DA/DH or MDA without the required visual references.
+
+Section 6.0 — Missed Approach
+1. Advance thrust to TOGA or go-around power
+2. Pitch up to initial climb attitude
+3. Retract flaps as directed by go-around procedure
+4. Follow published missed approach procedure
+5. Advise ATC: "Going around"
+6. Clean up aircraft and brief for next approach or diversion
+
+Section 7.0 — CAT II and CAT III Operations
+CAT II/III approaches require:
+- Authorized crew training and currency
+- Qualified aircraft and equipment (dual autopilot, HUD)
+- Appropriate airport facilities (CAT II/III lighting, RVR reporting)
+- DA as low as 100 feet (CAT II) or 0 feet (CAT IIIC)
+- Autoland capability for CAT IIIB/C
+NOTE: CAT III operations require both crew members to be qualified and current.
+
+Section 8.0 — Circling Approaches
+1. Maintain circling MDA until in position to land
+2. Keep the runway in sight at all times during circling
+3. If runway is lost during circling: immediately execute missed approach — turn toward the landing runway
+4. Circling radius limitations apply based on aircraft category
+CAUTION: Circling approaches at night or in low visibility significantly increase risk. Use extreme caution.

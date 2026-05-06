@@ -1,0 +1,53 @@
+WIND SHEAR AND MICROBURST PROCEDURES — STANDARD OPERATING PROCEDURE
+
+Section 1.0 — Scope
+This procedure covers detection, avoidance, and escape procedures for wind shear and microbursts during takeoff, approach, and landing, per FAA AC 00-54.
+
+Section 2.0 — Definitions
+2.1 Wind Shear: A sudden change in wind speed and/or direction over a short distance, causing rapid changes in airspeed and flight path.
+2.2 Microburst: An intense, localized column of sinking air producing damaging divergent winds at the surface. Duration: 5-15 minutes. Diameter: 1-3 miles.
+2.3 LLWAS: Low Level Wind Shear Alert System — airport-based detection.
+2.4 PIREP: Pilot Reports of wind shear encounters.
+
+Section 3.0 — Pre-Flight Planning
+1. Review SIGMETS, AIRMETS, and PIREPs for wind shear activity
+2. Check Terminal Aerodrome Forecast (TAF) for convective activity
+3. Brief wind shear escape maneuver during departure/arrival briefing
+4. Consider alternate airports if severe wind shear is forecast
+
+Section 4.0 — Indicators of Wind Shear
+- Sudden airspeed changes of 15 knots or more
+- Sudden altitude deviations
+- Unusual pitch attitude required to maintain glide path
+- GPWS wind shear warning activation
+- Heavy rain followed by ring of dust on the surface (visual indicator of microburst)
+- Virga (precipitation not reaching the ground)
+
+Section 5.0 — Wind Shear Escape Maneuver — Takeoff
+If wind shear is encountered during takeoff:
+1. Advance thrust levers to maximum takeoff thrust (TOGA)
+2. Rotate to initial pitch attitude of 15 degrees nose up
+3. Follow flight director if wind shear guidance is available
+4. Do NOT retract landing gear until positive rate is confirmed AND shear is exited
+5. Do NOT change flap configuration until clear of shear
+6. Do NOT attempt to maintain altitude at the expense of airspeed
+NOTE: Trading altitude for airspeed is acceptable — stall is the primary threat.
+
+Section 6.0 — Wind Shear Escape Maneuver — Approach
+If wind shear is encountered on approach:
+1. Advance thrust to TOGA
+2. Rotate to 15 degrees nose up
+3. If stick shaker activates, do NOT exceed stick shaker pitch attitude
+4. Follow flight director wind shear guidance
+5. Do NOT retract flaps or gear during the escape
+6. Climb to safe altitude before reconfiguring
+
+Section 7.0 — Avoidance
+- Delay takeoff/landing if wind shear is reported or detected
+- Increase approach speed by half the gust factor plus the full headwind loss
+- Maintain maximum thrust until clear of the shear zone
+- If microburst is reported within 3 miles of intended flight path, DELAY operations
+CAUTION: Do NOT attempt to fly through a known microburst. The risk is unacceptable.
+
+Section 8.0 — Reporting
+All wind shear encounters must be reported to ATC immediately via PIREP. Include: location, altitude, airspeed change, and flight conditions.

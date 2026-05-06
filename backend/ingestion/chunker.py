@@ -1,45 +1,106 @@
-"""
-Ingestion: Text Chunker.
+"""Section-aware text chunking with hierarchical metadata."""
 
-Splits extracted document text into overlapping chunks suitable for
-embedding and pgvector storage.
-"""
+import re
+import hashlib
 
-from __future__ import annotations
+HEADING_PATTERNS = [
+    (re.compile(r"^(Chapter\s+\d+[\.\d]*)\s*[—–-]?\s*(.*)", re.IGNORECASE | re.MULTILINE), "chapter"),
+    (re.compile(r"^(Section\s+\d+[\.\d]*)\s*[—–-]?\s*(.*)", re.IGNORECASE | re.MULTILINE), "section"),
+    (re.compile(r"^(\d+\.\d+[\.\d]*)\s+([A-Z].*)", re.MULTILINE), "subsection"),
+    (re.compile(r"^([A-Z][A-Z\s]{4,})$", re.MULTILINE), "heading"),
+    (re.compile(r"^((?:PART|FAR|AC)\s+\d+[\.\d\-]*)\s*[—–-]?\s*(.*)", re.IGNORECASE | re.MULTILINE), "regulation"),
+]
+
+CHECKLIST_RE = re.compile(
+    r"(?:^|\n)\s*(?:\d+[\.\)]\s|[a-z][\.\)]\s|•\s|[-–]\s|STEP\s+\d+|NOTE:|CAUTION:|WARNING:)",
+    re.IGNORECASE
+)
 
 
-class TextChunker:
-    """
-    Splits long document texts into fixed-size overlapping chunks.
+def detect_sections(text: str) -> list[dict]:
+    sections = []
+    for pattern, level in HEADING_PATTERNS:
+        for match in pattern.finditer(text):
+            title = match.group(0).strip()
+            sections.append({"position": match.start(), "level": level, "title": title[:120]})
+    sections.sort(key=lambda x: x["position"])
+    return sections
 
-    Supports both character-based and sentence-aware chunking strategies.
 
-    Typical usage:
-        chunker = TextChunker(chunk_size=512, chunk_overlap=64)
-        chunks = chunker.chunk(pages)
-    """
+def get_section_at_position(sections: list[dict], pos: int) -> dict:
+    result = {"chapter": "General", "section": "General", "subsection": ""}
+    for s in sections:
+        if s["position"] > pos:
+            break
+        result[s["level"]] = s["title"]
+    return result
 
-    def __init__(self, chunk_size: int = 512, chunk_overlap: int = 64) -> None:
-        """
-        Args:
-            chunk_size: Target size of each chunk in characters.
-            chunk_overlap: Number of overlapping characters between adjacent chunks.
-        """
-        self.chunk_size = chunk_size
-        self.chunk_overlap = chunk_overlap
 
-    def chunk(self, pages: list[dict]) -> list[dict]:
-        """
-        Split page texts into overlapping chunks.
+def is_checklist_content(text: str) -> bool:
+    matches = len(CHECKLIST_RE.findall(text))
+    return matches >= 2
 
-        Args:
-            pages: List of page dicts from :class:`~ingestion.pdf_parser.PDFParser`.
 
-        Returns:
-            List of chunk dicts with ``text`` (str), ``source`` (str), and
-            ``page_number`` (int) keys.
+def chunk_text(
+    text: str,
+    source_file: str,
+    page_number: int = 0,
+    chunk_size: int = 1500,
+    overlap: int = 300,
+) -> list[dict]:
+    sections = detect_sections(text)
+    chunks = []
+    start = 0
+    idx = 0
 
-        Raises:
-            NotImplementedError: Until chunking logic is implemented.
-        """
-        raise NotImplementedError("Text chunking not yet implemented.")
+    while start < len(text):
+        end = min(start + chunk_size, len(text))
+        if end < len(text):
+            nl = text.rfind("\n\n", start + chunk_size // 3, end)
+            if nl > start:
+                end = nl
+            else:
+                nl = text.rfind("\n", start + chunk_size // 2, end)
+                if nl > start:
+                    end = nl
+
+        chunk_str = text[start:end].strip()
+        if len(chunk_str) < 20:
+            start = end
+            continue
+
+        section_info = get_section_at_position(sections, start)
+        content_hash = hashlib.sha256(
+            f"{source_file}:{page_number}:{idx}:{chunk_str[:100]}".encode()
+        ).hexdigest()
+
+        chunks.append({
+            "content": chunk_str,
+            "metadata": {
+                "source_file": source_file,
+                "page_number": page_number,
+                "chapter": section_info["chapter"],
+                "section_title": section_info["section"],
+                "subsection": section_info["subsection"],
+                "chunk_index": idx,
+                "is_checklist": is_checklist_content(chunk_str),
+                "char_count": len(chunk_str),
+            },
+            "content_hash": content_hash,
+        })
+        idx += 1
+        start = end - overlap if end < len(text) else len(text)
+
+    return chunks
+
+
+def chunk_pages(pages: list[dict], source_file: str) -> list[dict]:
+    all_chunks = []
+    for page in pages:
+        page_chunks = chunk_text(
+            page["text"],
+            source_file=source_file,
+            page_number=page["page_number"],
+        )
+        all_chunks.extend(page_chunks)
+    return all_chunks

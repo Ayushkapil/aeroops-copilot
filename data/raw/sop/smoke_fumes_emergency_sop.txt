@@ -1,0 +1,42 @@
+SMOKE AND FUMES EMERGENCY PROCEDURES — STANDARD OPERATING PROCEDURE
+
+Section 1.0 — Scope
+This procedure covers flight crew response to smoke, fumes, or unusual odors detected in the cockpit or cabin, in accordance with AC 120-80A.
+
+Section 2.0 — Immediate Actions (Memory Items)
+Upon detection of smoke or fumes:
+1. Don oxygen masks — set to 100% / EMERGENCY
+2. Establish crew communication via interphone
+3. Declare MAYDAY to ATC
+4. Begin descent and divert to nearest suitable airport
+
+Section 3.0 — Smoke Source Identification
+After immediate actions are complete:
+- If smoke source is identified: Execute the appropriate checklist for that system
+- If smoke source is NOT identified: Execute the Smoke/Fumes of Unknown Origin checklist
+- Consider electrical load shedding: Turn off non-essential electrical systems systematically
+
+Section 4.0 — Electrical Load Shedding
+If smoke is suspected to be electrical in origin:
+1. Turn off galley power
+2. Turn off passenger entertainment systems
+3. Turn off non-essential bus loads
+4. Monitor: if smoke stops after turning off a specific system, leave it off
+5. Do NOT re-energize any system that was associated with smoke
+
+Section 5.0 — Cabin Crew Coordination
+- Brief cabin crew on situation via interphone
+- Cabin crew to locate smoke source if safe to do so
+- Prepare cabin for emergency landing
+- If fire is visible: use appropriate extinguisher (Halon for electrical, water for non-electrical)
+
+Section 6.0 — Landing Priority
+Smoke and fumes events are treated as emergencies. Request priority handling from ATC:
+- Shortest available approach to nearest suitable runway
+- Emergency services standing by
+- Consider landing overweight if necessary — structural inspection required post-landing
+
+Section 7.0 — Post-Landing
+- Evacuate aircraft if smoke continues after landing
+- Do NOT shut down engines until evacuation is complete (if smoke is in cabin area only)
+- Contact maintenance and file an Irregular Operations Report

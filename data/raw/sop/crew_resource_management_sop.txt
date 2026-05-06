@@ -1,0 +1,59 @@
+CREW RESOURCE MANAGEMENT (CRM) — STANDARD OPERATING PROCEDURE
+
+Section 1.0 — Purpose
+This document establishes Crew Resource Management principles for all flight operations, in accordance with FAA Advisory Circular AC 120-51E.
+
+Section 2.0 — CRM Definition
+CRM is the effective use of all available resources — human, hardware, and information — to achieve safe and efficient flight operations. CRM applies to all crew members including flight crew, cabin crew, dispatchers, and maintenance personnel.
+
+Section 3.0 — Core CRM Principles
+3.1 Communication
+- Use standard phraseology and callouts
+- Practice assertive communication: state concerns clearly and directly
+- Use closed-loop communication: sender transmits, receiver acknowledges
+- Brief and debrief every flight segment
+
+3.2 Situational Awareness
+- Maintain awareness of aircraft state, environment, and crew status
+- Monitor flight instruments even when not flying
+- Speak up immediately if something does not look or feel right
+- Use the "Two Challenge Rule": if a concern is raised twice and not addressed, the other crew member has authority to take control
+
+3.3 Decision Making
+- Use structured decision-making models (e.g., FORDEC: Facts, Options, Risks, Decision, Execution, Check)
+- Time-critical decisions: act decisively, communicate intent
+- Non-time-critical decisions: gather information, discuss options, decide as a crew
+- If in doubt, choose the most conservative option
+
+3.4 Workload Management
+- Distribute tasks appropriately between PF and PM
+- Prioritize: Aviate, Navigate, Communicate
+- Delay non-essential tasks during high-workload phases
+- Request assistance when workload exceeds capacity
+
+3.5 Leadership and Followership
+- The Captain has final authority (FAR 91.3)
+- First Officers are expected to monitor, support, and challenge when necessary
+- Effective captains create an environment where crew members feel safe speaking up
+- Gradient authority should be minimized — rank does not prevent error
+
+Section 4.0 — Threat and Error Management (TEM)
+4.1 Threats: External factors that increase operational complexity (weather, ATC, airport conditions)
+4.2 Errors: Crew actions or inactions that lead to deviation from intentions
+4.3 Undesired Aircraft States: Positions, speeds, or configurations that compromise safety
+
+TEM Strategy:
+1. Anticipate threats during pre-flight briefing
+2. Recognize errors when they occur — call them out immediately
+3. Manage undesired states with established procedures
+4. Trap errors before they become consequential
+
+Section 5.0 — Fatigue and Fitness
+- Crew members must self-assess fitness before each duty
+- Report fatigue to the Captain — do NOT fly if impaired
+- Use controlled rest procedures when available during cruise
+- Caffeine is a temporary aid, not a fatigue solution
+- Review FAR Part 117 duty time limitations before accepting assignments
+
+Section 6.0 — Documentation
+All CRM-related events (communication breakdowns, authority issues, significant threats) should be documented through the Aviation Safety Action Program (ASAP) or Safety Management System (SMS).

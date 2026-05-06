@@ -1,0 +1,38 @@
+STABILIZED APPROACH CRITERIA — STANDARD OPERATING PROCEDURE
+
+Section 1.0 — Purpose
+This document defines the criteria for a stabilized approach in accordance with FAA Advisory Circular AC 120-71A and ICAO best practices.
+
+Section 2.0 — Stabilized Approach Definition
+An approach is considered stabilized when all of the following criteria are met before reaching 1,000 feet AGL in IMC or 500 feet AGL in VMC:
+
+Section 2.1 — Airspeed Criteria
+The aircraft must be at the correct approach speed (VREF + wind correction), not exceeding VREF + 20 knots and not below VREF. Speed deviations greater than 10 knots require a go-around.
+
+Section 2.2 — Configuration
+The aircraft must be in the planned landing configuration with landing gear down and locked, flaps set to the landing position, and all checklists completed.
+
+Section 2.3 — Descent Rate
+The descent rate shall not exceed 1,000 feet per minute. If the descent rate exceeds 1,500 FPM at any point below 1,000 feet AGL, a go-around is mandatory.
+
+Section 2.4 — Lateral Deviation
+The aircraft must be on the correct flight path with no more than one dot lateral deviation on the localizer or LNAV path.
+
+Section 2.5 — Vertical Deviation
+The aircraft must be on the correct glide path with no more than one dot vertical deviation on the glideslope or VNAV path.
+
+Section 3.0 — Go-Around Criteria
+A go-around MUST be executed if any of the following occur:
+- The approach is not stabilized by the minimum stabilization altitude
+- Airspeed deviation exceeds VREF + 20 knots or falls below VREF - 5 knots
+- Descent rate exceeds 1,500 FPM below 1,000 feet AGL
+- Excessive lateral deviation from the runway centerline
+- Any doubt about the safety of the approach
+- ATC instruction to go around
+- Runway not clear or not visible at minimums
+
+Section 4.0 — Crew Responsibilities
+The Pilot Flying (PF) is responsible for maintaining the stabilized approach parameters. The Pilot Monitoring (PM) is responsible for calling out deviations and initiating go-around calls when criteria are not met.
+
+Section 5.0 — Documentation
+All unstabilized approaches and go-arounds must be documented in the flight report and reported through the Safety Management System (SMS).

@@ -1,46 +1,45 @@
-"""
-Module A — SOP RAG Pipeline: Reranker.
+"""Cross-encoder reranking for retrieved chunks."""
 
-Uses a cross-encoder model to rerank retrieved SOP chunks by relevance
-before passing them to the LLM generator.
-"""
+import math
+import logging
+from sentence_transformers import CrossEncoder
 
-from __future__ import annotations
+logger = logging.getLogger(__name__)
 
-from typing import Any
+_model = None
 
 
-class CrossEncoderReranker:
-    """
-    Reranks candidate SOP chunks using a cross-encoder model
-    (e.g. ``cross-encoder/ms-marco-MiniLM-L-6-v2``).
+def get_model():
+    global _model
+    if _model is None:
+        logger.info("Loading cross-encoder model...")
+        _model = CrossEncoder("cross-encoder/ms-marco-MiniLM-L-6-v2")
+    return _model
 
-    Typical usage:
-        reranker = CrossEncoderReranker(model_name="cross-encoder/ms-marco-MiniLM-L-6-v2")
-        top_chunks = reranker.rerank(query, chunks, top_n=5)
-    """
 
-    def __init__(self, model_name: str = "cross-encoder/ms-marco-MiniLM-L-6-v2") -> None:
-        """
-        Args:
-            model_name: HuggingFace cross-encoder model identifier.
-        """
-        self.model_name = model_name
-        self.model: Any = None  # Loaded lazily on first use
+def _sigmoid(x: float) -> float:
+    """Map unbounded logit to (0, 1) probability."""
+    # Clamp to avoid math overflow
+    if x < -50:
+        return 0.0
+    if x > 50:
+        return 1.0
+    return 1.0 / (1.0 + math.exp(-x))
 
-    def rerank(self, query: str, chunks: list[dict], top_n: int = 5) -> list[dict]:
-        """
-        Rerank retrieved chunks by cross-encoder relevance score.
 
-        Args:
-            query: Original user query text.
-            chunks: Candidate chunks returned by the retriever.
-            top_n: Number of top chunks to return after reranking.
+def rerank(query: str, chunks: list[dict], top_k: int = 5) -> list[dict]:
+    """Rerank chunks using cross-encoder, returning top_k with normalized scores."""
+    if not chunks:
+        return []
 
-        Returns:
-            Top-n reranked chunk dicts sorted by descending score.
+    model = get_model()
+    pairs = [(query, c["content"]) for c in chunks]
+    raw_scores = model.predict(pairs)
 
-        Raises:
-            NotImplementedError: Until cross-encoder reranking is implemented.
-        """
-        raise NotImplementedError("Cross-encoder reranking not yet implemented.")
+    for chunk, raw in zip(chunks, raw_scores):
+        raw_f = float(raw)
+        chunk["rerank_logit"] = raw_f       # keep original for debugging
+        chunk["rerank_score"] = _sigmoid(raw_f)  # normalized [0, 1]
+
+    ranked = sorted(chunks, key=lambda x: x["rerank_score"], reverse=True)
+    return ranked[:top_k]

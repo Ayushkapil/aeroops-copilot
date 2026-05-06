@@ -1,62 +1,73 @@
-"""
-Intent Router — LLM-based intent classification.
+"""LLM-based intent classification router."""
 
-Classifies incoming user requests and routes them to the appropriate
-module (Module A: SOP RAG, Module B: Incident Analysis, Module C:
-Fatigue Risk Planner).
-"""
+import os
+import logging
+from langchain_openai import ChatOpenAI
+from langchain.schema import SystemMessage, HumanMessage
+from dotenv import load_dotenv
 
-from __future__ import annotations
+load_dotenv()
+logger = logging.getLogger(__name__)
 
-from fastapi import APIRouter
+CLASSIFY_PROMPT = """Classify the user's aviation query into exactly one category:
+- "sop_query" — asking about procedures, regulations, standards, policies
+- "incident_analysis" — submitting or discussing an incident report
+- "fatigue_assessment" — submitting or discussing a schedule/fatigue/duty time
+- "general" — general aviation question (will be routed to SOP search)
 
-router = APIRouter()
+Examples:
+"What are the stabilized approach criteria?" → sop_query
+"Analyze this incident report" → incident_analysis  
+"Check this crew schedule for fatigue risk" → fatigue_assessment
+"What is a TCAS resolution advisory?" → general
 
-
-class IntentRouter:
-    """
-    LLM-based intent classifier that determines which module(s) to invoke
-    based on the user's input type and content.
-
-    Supported intents:
-        - ``sop_query``  → Module A
-        - ``incident_analysis`` → Module B (chains to Module A)
-        - ``fatigue_assessment`` → Module C (chains to Module A if high risk)
-    """
-
-    def classify(self, text: str) -> str:
-        """
-        Classify the intent of a user query.
-
-        Args:
-            text: Raw user input text.
-
-        Returns:
-            Intent label string.
-
-        Raises:
-            NotImplementedError: Until LLM classifier is implemented.
-        """
-        raise NotImplementedError("LLM intent classification not yet implemented.")
-
-    def route(self, intent: str, payload: dict) -> dict:
-        """
-        Route the request to the appropriate module handler.
-
-        Args:
-            intent: Classified intent label.
-            payload: Request payload dict.
-
-        Returns:
-            Module response dict.
-
-        Raises:
-            NotImplementedError: Until routing logic is implemented.
-        """
-        raise NotImplementedError("Intent routing not yet implemented.")
+Reply with ONLY the category name, nothing else."""
 
 
-@router.post("/query")
-async def query(body: dict) -> dict:
-    """Route a text query through the intent router (placeholder)."""
-    return {"status": "not_implemented", "message": "Intent router coming soon."}
+def classify_intent(query: str, has_pdf: bool = False, has_csv: bool = False) -> str:
+    """Classify user intent. File type overrides LLM classification."""
+    if has_pdf:
+        return "incident_analysis"
+    if has_csv:
+        return "fatigue_assessment"
+
+    try:
+        llm = ChatOpenAI(
+            model=os.getenv("LLM_MODEL", "llama-3.3-70b-versatile"),
+            temperature=0,
+            api_key=os.getenv("GROQ_API_KEY"),
+            base_url="https://api.groq.com/openai/v1",
+        )
+        response = llm.invoke([
+            SystemMessage(content=CLASSIFY_PROMPT),
+            HumanMessage(content=query),
+        ])
+        intent = response.content.strip().lower().replace('"', '').replace("'", "")
+        valid = {"sop_query", "incident_analysis", "fatigue_assessment", "general"}
+        return intent if intent in valid else "general"
+    except Exception as e:
+        logger.error(f"Intent classification error: {e}")
+        return "general"
+
+
+def route_query(query: str, db_client=None) -> dict:
+    """Route a text query through the appropriate module pipeline."""
+    from modules.module_a.retriever import SOPRetriever
+    from modules.module_a.reranker import rerank
+    from modules.module_a.generator import generate_answer
+
+    intent = classify_intent(query)
+
+    # Both sop_query and general route to Module A
+    retriever = SOPRetriever(db_client)
+    chunks = retriever.retrieve(query, top_k=20)
+    ranked = rerank(query, chunks, top_k=5)
+    result = generate_answer(query, ranked)
+
+    return {
+        "intent": intent,
+        "module": "A",
+        "response": result,
+        "chained_results": None,
+        "sources": result.get("citations", []),
+    }

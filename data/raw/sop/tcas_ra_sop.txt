@@ -1,0 +1,41 @@
+TCAS RESOLUTION ADVISORY PROCEDURES — STANDARD OPERATING PROCEDURE
+
+Section 1.0 — Purpose
+This procedure defines flight crew response to Traffic Collision Avoidance System (TCAS) Resolution Advisories (RAs), in accordance with FAA Advisory Circular AC 120-55C and ICAO Doc 9863.
+
+Section 2.0 — TCAS Alert Levels
+2.1 Traffic Advisory (TA): Amber display, advisory only. Crew should visually acquire traffic.
+2.2 Resolution Advisory (RA): Red display, mandatory maneuver required. Crew MUST comply immediately.
+
+Section 3.0 — Response to Resolution Advisory
+When a TCAS RA is received:
+1. IMMEDIATELY comply with the RA vertical guidance (climb/descend/maintain)
+2. Disconnect autopilot if it does not follow the RA
+3. Adjust vertical speed to achieve the green arc on the TCAS display
+4. Advise ATC: "TCAS RA" — do NOT request permission, just comply
+5. Do NOT follow ATC instructions that conflict with the RA
+6. Maintain the RA maneuver until "Clear of Conflict" is announced
+
+WARNING: ATC instructions that conflict with a TCAS RA must NOT be followed. The RA takes absolute priority.
+
+Section 4.0 — Preventive vs Corrective RAs
+4.1 Preventive RA: Limits vertical speed (e.g., "Don't Climb" or "Don't Descend"). Maintain current vertical speed within the green arc.
+4.2 Corrective RA: Requires a change in vertical speed (e.g., "Climb" or "Descend"). Immediately adjust to achieve the indicated vertical speed.
+
+Section 5.0 — Reversal RAs
+If the initial RA is reversed (e.g., "Climb" changes to "Descend"):
+1. Immediately comply with the new RA direction
+2. This occurs when the other aircraft has maneuvered in the same direction
+3. Expect rapid pitch changes — brief passengers if possible
+
+Section 6.0 — Post-RA Actions
+1. Return to assigned altitude when "Clear of Conflict" is received
+2. Advise ATC: "TCAS RA completed, returning to [altitude]"
+3. File a TCAS RA event report within 48 hours
+4. Notify dispatch and safety department
+
+Section 7.0 — TCAS Limitations
+- TCAS does not detect non-transponder-equipped aircraft
+- TCAS does not account for terrain
+- TCAS performance is reduced below 1,000 feet AGL
+- Multiple simultaneous RAs may produce conflicting guidance

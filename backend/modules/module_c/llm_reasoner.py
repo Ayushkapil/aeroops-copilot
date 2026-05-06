@@ -1,45 +1,57 @@
-"""
-Module C — Fatigue Risk Planner: LLM Reasoner.
+"""LLM contextual reasoning for fatigue risk assessment."""
 
-Provides contextual LLM reasoning over the rule-based fatigue score,
-generating human-readable risk narratives and mitigation recommendations.
-"""
+import os
+import json
+import logging
+from langchain_openai import ChatOpenAI
+from langchain.schema import SystemMessage, HumanMessage
+from dotenv import load_dotenv
 
-from __future__ import annotations
+load_dotenv()
+logger = logging.getLogger(__name__)
 
-from typing import Any
+SYSTEM_PROMPT = """You are an aviation fatigue risk management expert. Given a fatigue score, risk level, schedule data, and rule violations, provide contextual reasoning and mitigations.
+
+Return ONLY valid JSON with these fields:
+{
+  "reasoning": "Detailed explanation of why this schedule poses fatigue risk",
+  "peak_risk_window": "The time window with highest fatigue risk (e.g., '02:00-06:00 on Day 2')",
+  "mitigations": ["list of specific, actionable mitigation recommendations"],
+  "augmentation_needed": true/false
+}"""
 
 
-class FatigueLLMReasoner:
-    """
-    Augments the rule-based fatigue score with LLM contextual analysis,
-    producing a risk narrative and actionable mitigation recommendations.
+def reason(score: int, category: str, schedule_data: dict, rule_violations: list) -> dict:
+    """Generate LLM-based contextual reasoning for fatigue assessment."""
+    llm = ChatOpenAI(
+        model=os.getenv("LLM_MODEL", "llama-3.3-70b-versatile"),
+        temperature=0,
+        api_key=os.getenv("GROQ_API_KEY"),
+        base_url="https://api.groq.com/openai/v1",
+        model_kwargs={"response_format": {"type": "json_object"}},
+    )
 
-    Typical usage:
-        reasoner = FatigueLLMReasoner(llm=langchain_llm)
-        result = reasoner.reason(score_result, schedule_summary)
-    """
+    context = f"""Fatigue Score: {score}/100
+Risk Level: {category}
+Schedule Details: {json.dumps(schedule_data, default=str)}
+Rule Violations: {json.dumps(rule_violations)}"""
 
-    def __init__(self, llm: Any = None) -> None:
-        """
-        Args:
-            llm: Initialised LangChain LLM instance.
-        """
-        self.llm = llm
-
-    def reason(self, score_result: dict, schedule_summary: str) -> dict:
-        """
-        Generate contextual reasoning and mitigations for a fatigue score.
-
-        Args:
-            score_result: Output dict from :class:`~modules.module_c.scorer.FatigueScorer`.
-            schedule_summary: Plain-text summary of the pilot schedule.
-
-        Returns:
-            Dict with ``narrative`` (str), ``risk_level`` (str), and
-            ``mitigations`` (list[str]).
-
-        Raises:
-            NotImplementedError: Until LLM reasoning is implemented.
-        """
-        raise NotImplementedError("LLM fatigue contextual reasoning not yet implemented.")
+    try:
+        response = llm.invoke([
+            SystemMessage(content=SYSTEM_PROMPT),
+            HumanMessage(content=context),
+        ])
+        raw = response.content.strip()
+        if raw.startswith("```"):
+            raw = raw.split("\n", 1)[1] if "\n" in raw else raw[3:]
+            if raw.endswith("```"):
+                raw = raw[:-3]
+        return json.loads(raw)
+    except Exception as e:
+        logger.error(f"LLM reasoning error: {e}")
+        return {
+            "reasoning": f"Schedule scored {score}/100 ({category} risk). Violations: {', '.join(rule_violations) if rule_violations else 'None'}",
+            "peak_risk_window": "Unable to determine",
+            "mitigations": ["Review schedule with crew scheduling", "Ensure minimum rest requirements are met"],
+            "augmentation_needed": score > 60,
+        }

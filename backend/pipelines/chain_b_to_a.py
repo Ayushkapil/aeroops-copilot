@@ -1,51 +1,36 @@
-"""
-Pipeline: Incident Analysis → SOP Retrieval (Module B → Module A).
+"""Cross-module chain: Incident Analysis (B) → SOP Lookup (A)."""
 
-After Module B extracts structured incident intelligence, this pipeline
-automatically queries Module A (SOP RAG) for the relevant procedures
-referenced in ``sop_links`` and contributing factor keywords.
-"""
+import logging
+from modules.module_a.retriever import SOPRetriever
+from modules.module_a.reranker import rerank
+from modules.module_a.generator import generate_answer
 
-from __future__ import annotations
-
-from typing import Any
+logger = logging.getLogger(__name__)
 
 
-class IncidentToSOPChain:
-    """
-    Orchestrates the Incident Analysis → SOP Retrieval cross-module chain.
+def enrich_with_sop(analysis: dict, db_client=None) -> dict:
+    """After Module B produces an IncidentAnalysis, look up relevant SOPs."""
+    retriever = SOPRetriever(db_client)
+    sop_results = []
 
-    Flow:
-        1. Module B analyses the incident PDF → produces :class:`IncidentAnalysis`
-        2. This chain extracts ``sop_links`` and ``contributing_factors``
-        3. Module A is invoked for each relevant SOP reference
-        4. Retrieved SOP context is appended to the final response
+    # Query for each SOP link and event tag
+    search_terms = analysis.get("sop_links", []) + analysis.get("event_tags", [])[:3]
 
-    Typical usage:
-        chain = IncidentToSOPChain(module_b=analyzer, module_a_pipeline=rag)
-        result = chain.run(pdf_bytes)
-    """
+    for term in search_terms[:5]:  # Limit to 5 queries
+        query = f"aviation procedure: {term}"
+        try:
+            chunks = retriever.retrieve(query, top_k=10)
+            if chunks:
+                ranked = rerank(query, chunks, top_k=2)
+                if ranked:
+                    result = generate_answer(query, ranked)
+                    sop_results.append({
+                        "query": term,
+                        "answer": result["answer"],
+                        "citations": result["citations"],
+                    })
+        except Exception as e:
+            logger.warning(f"SOP lookup failed for '{term}': {e}")
 
-    def __init__(self, module_b: Any = None, module_a_pipeline: Any = None) -> None:
-        """
-        Args:
-            module_b: Initialised Module B incident analyzer.
-            module_a_pipeline: Initialised Module A RAG pipeline.
-        """
-        self.module_b = module_b
-        self.module_a_pipeline = module_a_pipeline
-
-    def run(self, pdf_bytes: bytes) -> dict:
-        """
-        Run the incident-to-SOP chain on an uploaded PDF.
-
-        Args:
-            pdf_bytes: Raw bytes of the incident report PDF.
-
-        Returns:
-            Dict with ``incident_analysis`` and ``sop_results`` keys.
-
-        Raises:
-            NotImplementedError: Until chain orchestration is implemented.
-        """
-        raise NotImplementedError("Incident → SOP chain not yet implemented.")
+    analysis["sop_enrichment"] = sop_results
+    return analysis

@@ -90,7 +90,7 @@ python evaluation/rq3_fatigue_eval.py  # Fatigue scoring metrics
 
 ## Team
 
-Bhavya Sri Kadavakolla, Sahana Madhugiri Shankar, Aryan Ashish Kathale, Ayush Kapileshwar, Linthoi Laishram
+ Aryan Ashish Kathale, Sahana Madhugiri Shankar,Bhavya Sri Kadavakolla,  Linthoi Laishram, Ayush Kapileshwar
 
 ## Acknowledgments
 
@@ -112,7 +112,7 @@ Consistent with academic-integrity norms for AI-assisted work, we want to be exp
 - **AI was a collaborator, not a source of truth** — Claude helped design pipelines, write code, and draft documentation. It did not generate the SOPs, ASRS reports, or regulatory text the system reasons over; those come from real published sources.
 - **Outputs are grounded and cited** — the runtime system itself is built around retrieval + citation specifically so that *its* answers can be traced back to source documents rather than relying on the LLM's parametric memory.
 
-In short: AI accelerated the build, humans owned the correctness.
+In short: AI helped us accelerate our build, we owned the thought behind them.
 
 ## License
 

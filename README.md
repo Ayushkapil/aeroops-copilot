@@ -103,6 +103,17 @@ This project was built collaboratively with **Claude** (Anthropic), which contri
 
 The human team owned the problem framing, domain decisions (aviation safety, regulatory grounding, evaluation criteria), and the final say on what shipped. The point of this note is to be honest about how the work happened, not to itemize it.
 
+### Responsible AI use
+
+Consistent with academic-integrity norms for AI-assisted work, we want to be explicit about how Claude was used and where the team stayed in the loop:
+
+- **Reviewed, not rubber-stamped** — every AI-generated change was read, run, and tested by a team member before being committed. Nothing was merged sight-unseen.
+- **Domain claims were verified by humans** — anything regulatory or safety-relevant (FAA/DGCA rest rules, SOP wording, fatigue-scoring thresholds) was checked against the source documents in `data/raw/sop/` and the cited regulations, not taken on the model's authority.
+- **AI was a collaborator, not a source of truth** — Claude helped design pipelines, write code, and draft documentation. It did not generate the SOPs, ASRS reports, or regulatory text the system reasons over; those come from real published sources.
+- **Outputs are grounded and cited** — the runtime system itself is built around retrieval + citation specifically so that *its* answers can be traced back to source documents rather than relying on the LLM's parametric memory.
+
+In short: AI accelerated the build, humans owned the correctness.
+
 ## License
 
 [MIT](LICENSE)

@@ -2,6 +2,18 @@
 
 Unified AI copilot for aviation safety & operations. Built as an LLM Course Project.
 
+## About
+
+AeroOps Copilot is a single AI assistant that flight crews, dispatchers, and safety officers can ask one natural-language question and get a grounded, regulation-aware answer — without juggling separate tools for SOP lookup, incident triage, and crew scheduling.
+
+Under the hood, three specialized modules sit behind a single chat interface:
+
+- **Looking up procedures** — ask about a Standard Operating Procedure (e.g. "what's the rejected-takeoff sequence for the 737?") and get an answer with citations from the actual SOP documents.
+- **Making sense of incident reports** — drop in an ASRS-style narrative and the system extracts what happened, contributing factors, and severity into a structured form, then enriches it with related SOPs.
+- **Catching fatigue risk in schedules** — upload a duty roster and the system flags rest-rule violations, scores fatigue risk, and surfaces the relevant regulations and mitigations.
+
+An LLM-based intent router decides which module(s) to invoke and chains them together when a question spans more than one (e.g. an incident report that should be cross-checked against SOPs). The goal is to take work that today is split across PDFs, spreadsheets, and tribal knowledge and put it behind one interface that always cites its sources.
+
 ## Modules
 
 | Module | Purpose |
